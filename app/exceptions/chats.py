@@ -11,3 +11,13 @@ class ChatListRequestError(ApplicationException):
     @property
     def message(self):
         return 'Не удалось получить список всех чатов.'
+
+
+@dataclass(frozen=True, eq=False)
+class ListenerListRequestError(ApplicationException):
+    status_code: int
+    response_content: str
+
+    @property
+    def message(self):
+        return 'Не удалось получить список всех слушателей чата.'

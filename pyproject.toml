@@ -12,6 +12,7 @@ django-environ = "^0.11.2"
 pydantic = "^2.7.2"
 pydantic-settings = "^2.2.1"
 dishka = "^1.2.0"
+faststream = {extras = ["kafka"], version = "^0.5.12"}
 
 
 [build-system]
