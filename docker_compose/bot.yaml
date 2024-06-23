@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  bot:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+
+    container_name: "chats-bot"
+
+    volumes:
+      - ../app/:/app/
+      - ../.env:/app/.env
+
+    command: "python main.py"
+

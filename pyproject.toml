@@ -13,6 +13,7 @@ pydantic = "^2.7.2"
 pydantic-settings = "^2.2.1"
 dishka = "^1.2.0"
 faststream = {extras = ["kafka"], version = "^0.5.12"}
+watchfiles = "^0.22.0"
 
 
 [build-system]

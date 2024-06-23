@@ -18,4 +18,4 @@ services:
       - ../app/:/app/
       - ../.env:/app/.env
 
-    command: "faststream run consumers.main:app"
+    command: "faststream run --factory consumers.main:get_app --reload"
