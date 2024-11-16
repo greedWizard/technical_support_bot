@@ -14,7 +14,11 @@ pydantic-settings = "^2.2.1"
 dishka = "^1.2.0"
 faststream = {extras = ["kafka"], version = "^0.5.12"}
 watchfiles = "^0.22.0"
+aiosqlite = "^0.20.0"
 
+
+[tool.poetry.group.dev.dependencies]
+debugpy = "^1.8.8"
 
 [build-system]
 requires = ["poetry-core"]

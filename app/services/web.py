@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 
 from httpx import AsyncClient
 
-from dtos.mesages import ChatListItemDTO, ChatListenerDTO
+from dtos.messages import ChatListItemDTO, ChatListenerDTO
 from exceptions.chats import (
     ChatInfoRequestError,
     ChatListRequestError,

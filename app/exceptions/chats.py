@@ -40,6 +40,26 @@ class ListenerAddRequestError(BaseWebException):
 
 
 @dataclass(frozen=True, eq=False)
+class ChatAlreadyExistsError(ApplicationException):
+    telegram_chat_id: str | None = None
+    web_chat_id: str | None = None
+
+    @property
+    def message(self):
+        return 'Чат с такими данными уже существует'
+
+
+@dataclass(frozen=True, eq=False)
+class ChatInfoNotFoundError(ApplicationException):
+    telegram_chat_id: str | None = None
+    web_chat_id: str | None = None
+
+    @property
+    def message(self):
+        return 'Не удалось найти созданный чат'
+
+
+@dataclass(frozen=True, eq=False)
 class ChatInfoRequestError(BaseWebException):
     @property
     def message(self):

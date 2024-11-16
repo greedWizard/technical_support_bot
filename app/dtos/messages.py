@@ -10,3 +10,8 @@ class ChatListItemDTO(BaseModel):
 
 class ChatListenerDTO(BaseModel):
     oid: str
+
+
+class ChatInfoDTO(BaseModel):
+    telegram_chat_id: str
+    web_chat_id: str
