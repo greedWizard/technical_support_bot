@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from urllib.parse import urljoin
 
-from httpx import AsyncClient
+from httpx import AsyncClient, HTTPError, TimeoutException
 
 from dtos.messages import ChatListItemDTO, ChatListenerDTO
 from exceptions.chats import (
@@ -10,8 +10,9 @@ from exceptions.chats import (
     ChatListRequestError,
     ListenerAddRequestError,
     ListenerListRequestError,
+    SendMessageToChatError,
 )
-from services.constants import CHAT_INFO_URI, CHAT_LIST_URI, CHAT_LISTENERS_URI, DEFAULT_LIMIT, DEFAULT_OFFSET
+from services.constants import CHAT_INFO_URI, CHAT_LIST_URI, CHAT_LISTENERS_URI, DEFAULT_LIMIT, DEFAULT_OFFSET, SEND_MESSAGE_TO_CHAT_URL
 from services.converters.chats import convert_chat_listener_response_to_listener_dto, convert_chat_response_to_chat_dto
 
 
@@ -34,6 +35,10 @@ class BaseChatWebService(ABC):
 
     @abstractmethod
     async def get_chat_info(self, chat_oid: str) -> ChatListItemDTO:
+        ...
+
+    @abstractmethod
+    async def send_message_to_chat(self, chat_oid: str, message_text: str):
         ...
 
 
@@ -88,3 +93,16 @@ class ChatWebService(BaseChatWebService):
             raise ChatInfoRequestError(status_code=response.status_code, response_content=response.content.decode())
 
         return convert_chat_response_to_chat_dto(chat_data=response.json())
+
+    async def send_message_to_chat(self, chat_oid: str, message_text: str):
+        try:
+            response = await self.http_client.post(
+                url=urljoin(
+                    base=self.base_url,
+                    url=SEND_MESSAGE_TO_CHAT_URL.format(chat_oid=chat_oid),
+                ),
+                json={'text': message_text},
+            )
+            response.raise_for_status()
+        except (TimeoutException, HTTPError):
+            raise SendMessageToChatError()

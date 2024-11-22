@@ -26,7 +26,7 @@ async def new_chat_handler(data: NewChatSchema):
         chat = await bot.get_chat(chat_id=settings.TELEGRAM_GROUP_ID)
         chats_service = await request_container.get(ChatsService)
 
-        chat_title = f'{data.chat_title} | {data.chat_oid}'
+        chat_title = data.chat_title
         topic = await chat.create_forum_topic(name=chat_title)
         await chats_service.add_chat(
             web_chat_id=data.chat_oid,

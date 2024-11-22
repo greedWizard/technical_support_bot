@@ -3,6 +3,7 @@ from telegram.ext import ContextTypes
 
 from containers.factories import get_container
 from handlers.converters.chats import convert_chats_dtos_to_message
+from services.chats import ChatsService
 from services.web import BaseChatWebService
 
 
@@ -54,19 +55,11 @@ async def quit_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def send_message_to_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text='Необходимо ответить именно на сообщение пользователя.',
-        message_thread_id=update.message.message_thread_id,
-    )
+    container = get_container()
 
-    try:
-        # TODO: сделать паттерн под UUID4
-        ...
-    except IndexError:
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,  # type: ignore
-            text='Необходимо ответить именно на сообщение пользователя.',
-        )
-        
-        return
+    async with container() as request_container:
+        web_service = await request_container.get(BaseChatWebService)  # type: ignore
+        service = await request_container.get(ChatsService)
+        chat_info = await service.get_chat_info_by_telegram_id(telegram_chat_id=update.message.message_thread_id)
+        await web_service.send_message_to_chat(chat_oid=chat_info.web_chat_id, message_text=update.message.text)
+

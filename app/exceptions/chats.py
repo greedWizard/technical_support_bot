@@ -21,21 +21,21 @@ class BaseWebException(ApplicationException):
 @dataclass(frozen=True, eq=False)
 class ChatListRequestError(BaseWebException):
     @property
-    def message(self):
+    def message(self) -> str:
         return 'Не удалось получить список всех чатов.'
 
 
 @dataclass(frozen=True, eq=False)
 class ListenerListRequestError(BaseWebException):
     @property
-    def message(self):
+    def message(self) -> str:
         return 'Не удалось получить список всех слушателей чата.'
 
 
 @dataclass(frozen=True, eq=False)
 class ListenerAddRequestError(BaseWebException):
     @property
-    def message(self):
+    def message(self) -> str:
         return 'Не удалось добавить слушателя к чату.'
 
 
@@ -45,7 +45,7 @@ class ChatAlreadyExistsError(ApplicationException):
     web_chat_id: str | None = None
 
     @property
-    def message(self):
+    def message(self) -> str:
         return 'Чат с такими данными уже существует'
 
 
@@ -55,12 +55,28 @@ class ChatInfoNotFoundError(ApplicationException):
     web_chat_id: str | None = None
 
     @property
-    def message(self):
+    def message(self) -> str:
         return 'Не удалось найти созданный чат'
+
+
+@dataclass(frozen=True, eq=False)
+class ChatNotFoundByTelegramIDError(ApplicationException):
+    telegram_chat_id: str
+
+    @property
+    def message(self) -> str:
+        return 'Чат для ответа не зарегистрирован в боте.'
 
 
 @dataclass(frozen=True, eq=False)
 class ChatInfoRequestError(BaseWebException):
     @property
-    def message(self):
+    def message(self) -> str:
         return 'Не удалось получить информацию о чате.'
+
+
+@dataclass(frozen=True, eq=False)
+class SendMessageToChatError(ApplicationException):
+    @property
+    def message(self) -> str:
+        return 'Не удалось отправить сообщение в чат.'

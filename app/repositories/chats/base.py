@@ -20,8 +20,8 @@ class BaseChatsRepository(ABC):
     @abstractmethod
     async def check_chat_exists(
         self,
-        web_chat_id: str | None,
-        telegram_chat_id: str | None,
+        web_chat_id: str | None = None,
+        telegram_chat_id: str | None = None,
     ) -> bool:
         ...
 
@@ -49,22 +49,24 @@ class SQLChatsRepository(BaseChatsRepository):
 
     async def get_by_telegram_id(self, telegram_chat_id: str) -> ChatInfoDTO:
         async with connect(self.database_url) as connection:
-            result = await connection.execute_insert(
+            result = await connection.execute_fetchall(
                 GET_CHAT_INFO_BY_TELEGRAM_ID,
-                (telegram_chat_id,)
+                (telegram_chat_id, )
             )
 
         if result is None:
             raise ChatInfoNotFoundError(telegram_chat_id=telegram_chat_id)
 
+        web_chat_id, telegram_chat_id = next(iter(result))
+
         return ChatInfoDTO(
-            telegram_chat_id=result[0],
-            web_chat_id=result[1],
+            telegram_chat_id=str(telegram_chat_id),
+            web_chat_id=web_chat_id,
         )
 
     async def get_by_external_id(self, web_chat_id: str) -> ChatInfoDTO:
         async with connect(self.database_url) as connection:
-            result = await connection.execute_insert(
+            result = await connection.execute_fetchall(
                 GET_CHAT_INFO_BY_WEB_ID,
                 (web_chat_id,)
             )
@@ -79,8 +81,8 @@ class SQLChatsRepository(BaseChatsRepository):
 
     async def check_chat_exists(
         self,
-        web_chat_id: str | None,
-        telegram_chat_id: str | None,
+        web_chat_id: str | None = None,
+        telegram_chat_id: str | None = None,
     ) -> bool:
         async with connect(self.database_url) as connection:
             result = await connection.execute_insert(
