@@ -25,6 +25,7 @@ class ProjectSettings(BaseSettings):
     KAFKA_BROKER_URL: str = Field(default='kafka:29092')
     NEW_MESSAGE_TOPIC: str = Field(default='new-messages')
     NEW_CHAT_TOPIC: str = Field(default='new-chats-topic')
+    DELETE_CHAT_TOPIC: str = Field(default='chat-deleted-topic')
     KAFKA_GROUP_ID: str = Field(default='tg-bot')
     DATABASE_NAME: str = Field(default='test.db')
     TELEGRAM_GROUP_ID: str = Field()

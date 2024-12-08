@@ -69,6 +69,15 @@ class ChatNotFoundByTelegramIDError(ApplicationException):
 
 
 @dataclass(frozen=True, eq=False)
+class ChatNotFoundByWebIDError(ApplicationException):
+    web_chat_id: str
+
+    @property
+    def message(self) -> str:
+        return 'Чат для ответа не зарегистрирован в боте.'
+
+
+@dataclass(frozen=True, eq=False)
 class ChatInfoRequestError(BaseWebException):
     @property
     def message(self) -> str:
